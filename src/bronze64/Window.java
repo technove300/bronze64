@@ -28,6 +28,7 @@ public class Window {
     private static Window window = null;
     private long frameTimer = 0;
     private long slowTimer = 0;
+    private long globalTimer = 0;
 
     private float r, g, b, a;
     
@@ -159,7 +160,7 @@ public class Window {
                 
             }
 
-            System.out.println(frameTimer);
+            System.out.println(globalTimer);
 
 
 
@@ -174,6 +175,9 @@ public class Window {
             if(String.valueOf(frameTimer).contains("0")){
                 slowTimer++;
             }
+
+            globalTimer++;
+
             glfwSwapBuffers(glfwWindow);
             
 
