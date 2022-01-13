@@ -9,6 +9,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import java.nio.IntBuffer;
+import java.util.Random;
 
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -24,8 +25,11 @@ public class Window {
     private int width, height;
     private String title;
     private long glfwWindow;
-
     private static Window window = null;
+    private long frameTimer = 0;
+    private long slowTimer = 0;
+
+    private float r, g, b, a;
     
     private Window() {
         
@@ -82,6 +86,13 @@ public class Window {
             throw new IllegalStateException("failed to create window!");
         }
 
+        glfwSetCursorPosCallback(glfwWindow, ListenMouse::cursorPosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, ListenMouse::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, ListenMouse::mousescrollCallback);
+        glfwSetKeyCallback(glfwWindow, ListenKey::keyCallback);
+
+
+
         /* Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(glfwWindow, (glfwWindow, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
@@ -131,10 +142,38 @@ public class Window {
     public void loop() {
         while (!glfwWindowShouldClose(glfwWindow)) {
             glfwPollEvents();
-
-            glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+            
+            
+            
+            glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
+            if (ListenKey.iskeyPressed(GLFW_KEY_SPACE)) {
+                System.out.println("space key pressed!!");
+            }
+
+            if(String.valueOf(frameTimer).contains("0") && slowTimer < 1000) {
+                r = new Random().nextFloat();
+                g = new Random().nextFloat();
+                b = new Random().nextFloat();
+                
+            }
+
+            System.out.println(frameTimer);
+
+
+
+
+
+            if(frameTimer >= 9){
+                frameTimer = 0;
+            } else{
+                frameTimer++;
+            }
+            
+            if(String.valueOf(frameTimer).contains("0")){
+                slowTimer++;
+            }
             glfwSwapBuffers(glfwWindow);
             
 
