@@ -3,13 +3,15 @@ package bronze64;
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.system.*;
+
+import bronze64.util.Time;
+
 import org.lwjgl.opengl.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-import java.nio.IntBuffer;
-import java.util.Random;
+import java.nio.*;
 
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -26,17 +28,40 @@ public class Window {
     private String title;
     private long glfwWindow;
     private static Window window = null;
-    private long frameTimer = 0;
-    private long slowTimer = 0;
-    private long globalTimer = 0;
+    private static Scene currentScene;
+    //private long frameTimer = 0;
+    //private long slowTimer = 0;
+    //private long globalTimer = 0;
 
-    private float r, g, b, a;
+    public float r, g, b, a;
     
     private Window() {
         
         this.width = 1024;
         this.height = 576;
         this.title = "bronze!";
+
+    }
+
+    public static void changeScene(int newScene) {
+
+        switch(newScene) {
+            case 0:
+                currentScene = new MenuScene();
+                //currentScene.init();
+                break;
+            case 1:
+                currentScene = new LevelScene();
+                //init
+                break;
+            case 2:
+                currentScene = new LevelEditorScene();
+                //init
+                break;
+            default:
+                assert false: "Unknown Scene: " + newScene + "!!";
+                break;
+        }
 
     }
 
@@ -87,10 +112,10 @@ public class Window {
             throw new IllegalStateException("failed to create window!");
         }
 
-        glfwSetCursorPosCallback(glfwWindow, ListenMouse::cursorPosCallback);
-        glfwSetMouseButtonCallback(glfwWindow, ListenMouse::mouseButtonCallback);
-        glfwSetScrollCallback(glfwWindow, ListenMouse::mousescrollCallback);
-        glfwSetKeyCallback(glfwWindow, ListenKey::keyCallback);
+        glfwSetCursorPosCallback(glfwWindow, Mouse::cursorPosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, Mouse::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, Mouse::mousescrollCallback);
+        glfwSetKeyCallback(glfwWindow, Keyboard::keyCallback);
 
 
 
@@ -123,13 +148,12 @@ public class Window {
 
         // make the opengl context current
         glfwMakeContextCurrent(glfwWindow);
+        
         // v-sync
         glfwSwapInterval(1);
 
         //make the window visible
         glfwShowWindow(glfwWindow);
-
-
 
         // This line is critical for LWJGL's interoperation with GLFW's
 		// OpenGL context, or any context that is managed externally.
@@ -138,48 +162,72 @@ public class Window {
 		// bindings available for use.
         GL.createCapabilities();
 
+        Window.changeScene(2);
+
     }
 
     public void loop() {
+
+        float beginTime = Time.getTime();
+        float endTime;
+        float dt = -1.0f;
+
+
         while (!glfwWindowShouldClose(glfwWindow)) {
+
             glfwPollEvents();
-            
-            
             
             glClearColor(r, g, b, a);
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (ListenKey.iskeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("space key pressed!!");
+            
+
+            
+            
+            if (dt >= 0) {
+                currentScene.update(dt);
             }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+            
+            
+            /*
             if(String.valueOf(frameTimer).contains("0") && slowTimer < 1000) {
                 r = new Random().nextFloat();
                 g = new Random().nextFloat();
                 b = new Random().nextFloat();
                 
             }
-
-            System.out.println(globalTimer);
-
-
-
-
+            System.out.println(globalTimer):
 
             if(frameTimer >= 9){
                 frameTimer = 0;
             } else{
                 frameTimer++;
             }
-            
             if(String.valueOf(frameTimer).contains("0")){
                 slowTimer++;
             }
-
             globalTimer++;
+            */
 
             glfwSwapBuffers(glfwWindow);
-            
+
+            endTime = Time.getTime();
+            dt = endTime - beginTime;
+            beginTime = endTime;
 
         }
 

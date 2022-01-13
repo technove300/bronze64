@@ -2,15 +2,15 @@ package bronze64;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class ListenMouse {
-    private static ListenMouse instance;
+public class Mouse {
+    private static Mouse instance;
     private double xscroll, yscroll;
     private double xpos, ypos, ylast, xlast;
     private boolean mousebuttonPressed[] = new boolean[3];
     private boolean isDrag;
 
 
-    private ListenMouse() {
+    private Mouse() {
         this.xscroll = 0.0;
         this.yscroll = 0.0;
         this.xpos = 0.0;
@@ -19,9 +19,9 @@ public class ListenMouse {
         this.xlast = 0.0;
     }
 
-    public static ListenMouse get() {
+    public static Mouse get() {
         if (instance == null){
-            instance = new ListenMouse();
+            instance = new Mouse();
 
         }
         return instance;

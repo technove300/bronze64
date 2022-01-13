@@ -2,19 +2,19 @@ package bronze64;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class ListenKey {
-    private static ListenKey instance;
+public class Keyboard {
+    private static Keyboard instance;
     private boolean keyPressed[] = new boolean[350];
 
-    private ListenKey(){
+    private Keyboard(){
 
     }
 
-    public static ListenKey get() {
-        if(ListenKey.instance == null) {
-            ListenKey.instance = new ListenKey();
+    public static Keyboard get() {
+        if(Keyboard.instance == null) {
+            Keyboard.instance = new Keyboard();
         }
-        return ListenKey.instance;
+        return Keyboard.instance;
     }
 
 
