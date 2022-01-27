@@ -14,7 +14,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.nio.*;
 
 import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.glfw.Callbacks.*;
 
 
@@ -32,7 +32,6 @@ public class Window {
     //private long frameTimer = 0;
     //private long slowTimer = 0;
     //private long globalTimer = 0;
-
     public float r, g, b, a;
     
     private Window() {
@@ -48,14 +47,16 @@ public class Window {
         switch(newScene) {
             case 0:
                 currentScene = new MenuScene();
-                //currentScene.init();
+                currentScene.init();
                 break;
             case 1:
                 currentScene = new LevelScene();
+                currentScene.init();
                 //init
                 break;
             case 2:
                 currentScene = new LevelEditorScene();
+                currentScene.init();
                 //init
                 break;
             default:
